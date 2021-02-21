@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmitAsync">
       <input v-model="username" data-username>
       <input type="submit">
     </form>
@@ -26,8 +26,14 @@
     },
 
     methods: {
-      handleSubmit() {
-        this.submitted = true
+      handleSubmitAsync() {
+        return this.$http.get("/api/v1/register", { username: this.username })
+          .then(() => {
+            this.submitted = true
+          })
+          .catch((e) => {
+            throw Error("Something went wrong", e)
+          })
       }
     }
   }
